@@ -10,7 +10,7 @@ struct Car {
 
 struct Wheel {
     id: i32,
-    car: Rc<Car>, // 引用 Car
+    car: Weak<Car>, // Weak 引用 Car
 }
 
 fn main() {
@@ -20,17 +20,21 @@ fn main() {
             wheels: RefCell::new(vec![]),
         }
     );
-    let wl1 = Rc::new(Wheel { id:1, car: Rc::clone(&car) });
-    let wl2 = Rc::new(Wheel { id:2, car: Rc::clone(&car) });
+    let wl1 = Rc::new(Wheel { id:1, car: Rc::downgrade(&car) });
+    let wl2 = Rc::new(Wheel { id:2, car: Rc::downgrade(&car) });
 
-    let mut wheels = car.wheels.borrow_mut();
-
-    // downgrade 得到 Weak
-    wheels.push(Rc::downgrade(&wl1));
-    wheels.push(Rc::downgrade(&wl2));
+    {
+        let mut wheels = car.wheels.borrow_mut();
+        // downgrade 得到 Weak
+        wheels.push(Rc::downgrade(&wl1));
+        wheels.push(Rc::downgrade(&wl2));
+    } // 确保借用结束
 
     for wheel_weak in car.wheels.borrow().iter() {
-        let wl = wheel_weak.upgrade().unwrap(); // Option
-        println!("wheel {} owned by {}", wl.id, wl.car.name);
+        if let Some(wl) = wheel_weak.upgrade() {
+            println!("wheel {} owned by {}", wl.id, wl.car.upgrade().unwrap().name);
+        } else {
+            println!("wheel weak reference has been dropped");
+        }
     }
 }
