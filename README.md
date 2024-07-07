@@ -27,7 +27,7 @@ A book about [Rust programming language](https://www.rust-lang.org/) written in 
 
 ### Code 
 
-All demo codes are saved by chapter under `publication/code/`.
+All demo code is located in the `publication/code/` directory. whereas the `code` is outdated.
 
 ![code_statistics](./code_statistics.png)
 
@@ -37,8 +37,9 @@ All demo codes are saved by chapter under `publication/code/`.
 -->
 
 ### Changelog 
+* 2024-07-07 fix some errors and rewrite README
 * 2023-06-18 add publication edition info
-* 2023-04-29 add english version of the book
+* 2023-04-29 add english version
 * 2022-05-15 add a new directory `publication`
 * 2022-02-27 change the book cover
 * 2022-02-15 add stargazer chart
